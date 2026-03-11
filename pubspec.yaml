@@ -1,0 +1,32 @@
+name: tomato_vit
+description: "Aplicativo para detecção de doenças foliares em tomateiro (PFC2)."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '^3.11.0' # Restrição exigida pelo Dart
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  
+  # Machine Learning e Câmera
+  tflite_flutter: ^0.10.4
+  camera: ^0.11.0+1
+  image_picker: ^1.1.2
+  image: ^4.1.7
+  provider: ^6.1.5+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Declarando onde nossos modelos ficarão
+  assets:
+    - assets/models/
+    - assets/labels/
