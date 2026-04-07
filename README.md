@@ -55,8 +55,6 @@ O projeto foi construído utilizando **Flutter** e segue princípios da **Clean 
     ```Bash
     flutter pub get
 
-4. Importante: Devido a restrições do GitHub, o  arquivo de pesos do modelo IA (mobilevit_s_fp16.tflite) pode não estar no repositório. Certifique-se de colocar o arquivo do modelo dentro da pasta assets/ na raiz do projeto.
-
-5. Execute o aplicativo:
+4. Execute o aplicativo:
     ```Bash
     flutter run
