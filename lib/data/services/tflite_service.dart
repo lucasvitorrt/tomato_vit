@@ -120,14 +120,30 @@ class TFLiteService {
       }
     }
 
+    // NOVA TRAVA DE SEGURANÇA: Se a confiança for menor que 85% (0.85)
+    if (maxConfidence < 0.85) {
+      return ClassificationResult(
+        className: 'Unrecognized',
+        translatedName: 'Objeto não reconhecido ou foto sem nitidez',
+        confidence: maxConfidence,
+      );
+    }
+
+    // Se passou da trava, pegamos o nome da classe
     String rawClass = _labels[predictedIndex];
+    String cleanClass = rawClass
+        .replaceAll('Tomato___', '')
+        .replaceAll('_', ' ');
+
+    // Tratamento extra para padronizar o "healthy" com H maiúsculo
+    if (cleanClass.toLowerCase() == 'healthy') {
+      cleanClass = 'Healthy';
+    }
+
     // Retorna a entidade limpa para a interface
     return ClassificationResult(
-      className: _labels[predictedIndex]
-          .replaceAll('Tomato___', '')
-          .replaceAll('_', ' '),
-      translatedName:
-          _translations[rawClass] ?? 'Desconhecido', // Puxa do nosso dicionário
+      className: cleanClass,
+      translatedName: _translations[rawClass] ?? 'Desconhecido',
       confidence: maxConfidence,
     );
   }

@@ -169,18 +169,40 @@ class HomeScreen extends StatelessWidget {
         );
 
       case ViewState.success:
+        // 1. Lógica para definir o cenário (Saudável, Doente ou Não Reconhecido)
         final bool isHealthy = viewModel.predictedClass!.toLowerCase().contains(
           'healthy',
         );
-        final color = isHealthy ? AppTheme.verdeFolha : AppTheme.vermelhoTomate;
+        final bool isUnrecognized = viewModel.predictedClass == 'Unrecognized';
+
+        Color color;
+        IconData resultIcon;
+
+        // 2. Define as cores e ícones dinamicamente
+        if (isUnrecognized) {
+          color = Colors.orange; // Cor de alerta para objetos estranhos
+          resultIcon = Icons.warning_amber_rounded;
+        } else if (isHealthy) {
+          color = AppTheme.verdeFolha;
+          resultIcon = Icons.check_circle_outline;
+        } else {
+          color = AppTheme.vermelhoTomate;
+          resultIcon =
+              Icons.coronavirus_outlined; // Ícone de alerta para doença
+        }
 
         return SingleChildScrollView(
           // Adicionado para evitar quebra de tela em telas menores
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // NOVO: Ícone visual de feedback
+              Icon(resultIcon, size: 48, color: color),
+              const SizedBox(height: 8),
+
+              // NOVO: Texto muda de acordo com o contexto
               Text(
-                'Diagnóstico Concluído',
+                isUnrecognized ? 'Atenção' : 'Diagnóstico Concluído',
                 style: TextStyle(color: Colors.grey[600], fontSize: 14),
               ),
               const SizedBox(height: 8),
