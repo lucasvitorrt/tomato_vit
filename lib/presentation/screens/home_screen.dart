@@ -173,7 +173,7 @@ class HomeScreen extends StatelessWidget {
         final bool isHealthy = viewModel.predictedClass!.toLowerCase().contains(
           'healthy',
         );
-        final bool isUnrecognized = viewModel.predictedClass == 'Unrecognized';
+        final bool isUnrecognized = viewModel.predictedClass == 'Não Reconhecido';
 
         Color color;
         IconData resultIcon;

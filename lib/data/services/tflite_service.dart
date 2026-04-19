@@ -123,7 +123,7 @@ class TFLiteService {
     // NOVA TRAVA DE SEGURANÇA: Se a confiança for menor que 85% (0.85)
     if (maxConfidence < 0.85) {
       return ClassificationResult(
-        className: 'Unrecognized',
+        className: 'Não Reconhecido',
         translatedName: 'Objeto não reconhecido ou foto sem nitidez',
         confidence: maxConfidence,
       );
