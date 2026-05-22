@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/constants/app_theme.dart';
 import '../viewmodels/inference_viewmodel.dart';
+import 'package:flutter/foundation.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -56,7 +57,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               // Área Principal (Exibição da Imagem ou Placeholder)
               Expanded(
-                flex: 3,
+                flex: 2,
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -173,7 +174,8 @@ class HomeScreen extends StatelessWidget {
         final bool isHealthy = viewModel.predictedClass!.toLowerCase().contains(
           'healthy',
         );
-        final bool isUnrecognized = viewModel.predictedClass == 'Não Reconhecido';
+        final bool isUnrecognized =
+            viewModel.predictedClass == 'Não Reconhecido';
 
         Color color;
         IconData resultIcon;
@@ -265,6 +267,30 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
+
+              // NOVO: Exibição da Latência apenas para Coleta de Dados (Artigo)
+              if (kDebugMode && viewModel.inferenceTime != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                    ),
+                    child: Text(
+                      'Latência de Inferência: ${viewModel.inferenceTime} ms',
+                      style: const TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
 
               const SizedBox(height: 16),
               TextButton.icon(

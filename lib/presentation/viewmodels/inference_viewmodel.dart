@@ -13,6 +13,8 @@ class InferenceViewModel extends ChangeNotifier {
   String? _translatedClass;
   double? _confidence;
   String? _errorMessage;
+  int? _inferenceTime;
+  int? get inferenceTime => _inferenceTime;
 
   // Construtor que recebe o serviço injetado
   InferenceViewModel(this._tfliteService) {
@@ -51,6 +53,7 @@ class InferenceViewModel extends ChangeNotifier {
       _predictedClass = result.className;
       _translatedClass = result.translatedName;
       _confidence = result.confidence;
+      _inferenceTime = result.inferenceTime;
       _state = ViewState.success;
     } catch (e) {
       _errorMessage = "Erro ao processar imagem: $e";
@@ -65,6 +68,7 @@ class InferenceViewModel extends ChangeNotifier {
     _imagePath = null;
     _predictedClass = null;
     _confidence = null;
+    _inferenceTime = null;
     _errorMessage = null;
     notifyListeners();
   }

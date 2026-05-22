@@ -102,8 +102,14 @@ class TFLiteService {
     // 5. Tensor de Saída [Batch, NumClasses]
     var outputTensor = List.generate(1, (i) => List.filled(10, 0.0));
 
+    // --- INÍCIO DO CRONÔMETRO ---
+    final stopwatch = Stopwatch()..start();
+
     // 6. Inferência!
     _interpreter!.run(inputTensor, outputTensor);
+
+    stopwatch.stop();
+    final int tempoDeInferencia = stopwatch.elapsedMilliseconds;
 
     // A saída do PyTorch são 'logits' (números brutos). Precisamos aplicar o Softmax.
     final logits = outputTensor[0];
@@ -126,6 +132,7 @@ class TFLiteService {
         className: 'Não Reconhecido',
         translatedName: 'Objeto não reconhecido ou foto sem nitidez',
         confidence: maxConfidence,
+        inferenceTime: tempoDeInferencia,
       );
     }
 
@@ -145,6 +152,7 @@ class TFLiteService {
       className: cleanClass,
       translatedName: _translations[rawClass] ?? 'Desconhecido',
       confidence: maxConfidence,
+      inferenceTime: tempoDeInferencia,
     );
   }
 
