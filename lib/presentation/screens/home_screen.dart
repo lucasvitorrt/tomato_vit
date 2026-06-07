@@ -142,7 +142,6 @@ class HomeScreen extends StatelessWidget {
   }
 
   // Define o que mostrar na área de resultados
-  // Define o que mostrar na área de resultados
   Widget _buildResultArea(InferenceViewModel viewModel, BuildContext context) {
     switch (viewModel.state) {
       case ViewState.initial:
@@ -170,7 +169,7 @@ class HomeScreen extends StatelessWidget {
         );
 
       case ViewState.success:
-        // 1. Lógica para definir o cenário (Saudável, Doente ou Não Reconhecido)
+        // Lógica para definir o cenário (Saudável, Doente ou Não Reconhecido)
         final bool isHealthy = viewModel.predictedClass!.toLowerCase().contains(
           'healthy',
         );
@@ -180,7 +179,7 @@ class HomeScreen extends StatelessWidget {
         Color color;
         IconData resultIcon;
 
-        // 2. Define as cores e ícones dinamicamente
+        // Define as cores e ícones dinamicamente
         if (isUnrecognized) {
           color = Colors.orange; // Cor de alerta para objetos estranhos
           resultIcon = Icons.warning_amber_rounded;
@@ -198,11 +197,11 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // NOVO: Ícone visual de feedback
+              // Ícone visual de feedback
               Icon(resultIcon, size: 48, color: color),
               const SizedBox(height: 8),
 
-              // NOVO: Texto muda de acordo com o contexto
+              // Texto muda de acordo com o contexto
               Text(
                 isUnrecognized ? 'Atenção' : 'Diagnóstico Concluído',
                 style: TextStyle(color: Colors.grey[600], fontSize: 14),
@@ -229,7 +228,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Nova Barra de Progresso!
+              // Barra de Progresso
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
                 child: Column(
@@ -268,7 +267,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
 
-              // NOVO: Exibição da Latência apenas para Coleta de Dados (Artigo)
+              // Exibição da Latência apenas para Coleta de Dados (Artigo)
               if (kDebugMode && viewModel.inferenceTime != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0),

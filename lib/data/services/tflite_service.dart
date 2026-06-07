@@ -8,7 +8,6 @@ class TFLiteService {
   Interpreter? _interpreter;
 
   // As 10 classes do dataset PlantVillage de Tomate (na ordem exata que o Python gerou)
-  // IMPORTANTE: Garanta que esta ordem é a mesma do seu 'dataset.classes' no Python
   final List<String> _labels = [
     'Tomato___Bacterial_spot',
     'Tomato___Early_blight',
@@ -35,42 +34,40 @@ class TFLiteService {
     'Tomato___Healthy': 'Planta Saudável',
   };
 
-  /// Inicializa o interpretador carregando o modelo fp16 dos assets
+  // Inicializa o interpretador carregando o modelo fp16 dos assets
   Future<void> initialize() async {
     try {
       final options = InterpreterOptions();
 
       // Vamos usar 4 threads do processador do celular para garantir rapidez
-      // sem precisar brigar com os drivers de NPU/GPU neste primeiro momento.
       options.threads = 4;
 
-      // Carrega o modelo (garanta que o arquivo mobilevit_s_fp16.tflite está na pasta assets)
-      // Adicionamos o "assets/" antes do nome
+      // Carrega o modelo (o arquivo mobilevit_s_fp16.tflite está na pasta assets)
       _interpreter = await Interpreter.fromAsset(
         'assets/mobilevit_s_fp16.tflite',
         options: options,
       );
-      print('✅ Modelo TFLite (fp16) carregado com sucesso!');
+      print('Modelo TFLite (fp16) carregado com sucesso!');
     } catch (e) {
-      print('❌ Erro ao carregar o modelo: $e');
+      print('Erro ao carregar o modelo: $e');
       throw Exception('Falha ao inicializar a IA.');
     }
   }
 
-  /// Executa todo o pipeline: decodifica, redimensiona, normaliza e infere
+  //Executa todo o pipeline: decodifica, redimensiona, normaliza e infere
   Future<ClassificationResult> classifyImage(String imagePath) async {
     if (_interpreter == null)
       throw Exception('Interpretador não inicializado.');
 
-    // 1. Decodifica a imagem original do arquivo
+    // Decodifica a imagem original do arquivo
     final imageFile = File(imagePath);
     final rawImage = img.decodeImage(imageFile.readAsBytesSync());
     if (rawImage == null) throw Exception('Não foi possível ler a imagem.');
 
-    // 2. transforms.Resize((224, 224))
+    // Redimensiona a imagem para 224x224
     final resizedImage = img.copyResize(rawImage, width: 224, height: 224);
 
-    // 3. Prepara o Tensor de Entrada (Formato NHWC - Padrão TFLite)
+    // Prepara o Tensor de Entrada (Formato NHWC - Padrão TFLite)
     // [1, 224, 224, 3] -> [Batch, Altura, Largura, Canais RGB]
     var inputTensor = List.generate(
       1,
@@ -84,7 +81,7 @@ class TFLiteService {
     final mean = [0.485, 0.456, 0.406];
     final std = [0.229, 0.224, 0.225];
 
-    // 4. Preenchendo o tensor e aplicando a normalização PyTorch
+    // Preenchendo o tensor e aplicando a normalização PyTorch
     for (int y = 0; y < 224; y++) {
       for (int x = 0; x < 224; x++) {
         final pixel = resizedImage.getPixel(x, y);
@@ -99,13 +96,13 @@ class TFLiteService {
       }
     }
 
-    // 5. Tensor de Saída [Batch, NumClasses]
+    // Tensor de Saída [Batch, NumClasses]
     var outputTensor = List.generate(1, (i) => List.filled(10, 0.0));
 
     // --- INÍCIO DO CRONÔMETRO ---
     final stopwatch = Stopwatch()..start();
 
-    // 6. Inferência!
+    // Inferência
     _interpreter!.run(inputTensor, outputTensor);
 
     stopwatch.stop();
@@ -115,7 +112,7 @@ class TFLiteService {
     final logits = outputTensor[0];
     final probabilities = _softmax(logits);
 
-    // 7. Encontra a maior probabilidade (ArgMax)
+    // Encontra a maior probabilidade (ArgMax)
     double maxConfidence = -1.0;
     int predictedIndex = -1;
 
@@ -126,7 +123,7 @@ class TFLiteService {
       }
     }
 
-    // NOVA TRAVA DE SEGURANÇA: Se a confiança for menor que 85% (0.85)
+    // Se a confiança for menor que 85% (0.85)
     if (maxConfidence < 0.85) {
       return ClassificationResult(
         className: 'Não Reconhecido',
@@ -156,9 +153,9 @@ class TFLiteService {
     );
   }
 
-  /// Função utilitária para aplicar Softmax nos logits
+  // Função para aplicar Softmax nos logits
   List<double> _softmax(List<double> logits) {
-    double maxLogit = logits.reduce(max); // Previne overflow matemático
+    double maxLogit = logits.reduce(max); // Previne overflow
     List<double> expValues = logits
         .map((logit) => exp(logit - maxLogit))
         .toList();

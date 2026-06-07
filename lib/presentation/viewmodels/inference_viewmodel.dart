@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../data/services/tflite_service.dart';
-// Importe suas entidades e serviços aqui no futuro
 
 enum ViewState { initial, loading, success, error }
 
