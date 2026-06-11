@@ -32,7 +32,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/mobilevit_s_fp16.tflite
+    - assets/mobilevit_s_fp32.tflite
 
 flutter_launcher_icons:
   android: "launcher_icon"

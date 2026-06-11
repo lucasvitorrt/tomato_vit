@@ -34,7 +34,7 @@ class TFLiteService {
     'Tomato___Healthy': 'Planta Saudável',
   };
 
-  // Inicializa o interpretador carregando o modelo fp16 dos assets
+  // Inicializa o interpretador carregando o modelo fp32 dos assets
   Future<void> initialize() async {
     try {
       final options = InterpreterOptions();
@@ -42,12 +42,12 @@ class TFLiteService {
       // Vamos usar 4 threads do processador do celular para garantir rapidez
       options.threads = 4;
 
-      // Carrega o modelo (o arquivo mobilevit_s_fp16.tflite está na pasta assets)
+      // Carrega o modelo (o arquivo mobilevit_s_fp32.tflite está na pasta assets)
       _interpreter = await Interpreter.fromAsset(
-        'assets/mobilevit_s_fp16.tflite',
+        'assets/mobilevit_s_fp32.tflite',
         options: options,
       );
-      print('Modelo TFLite (fp16) carregado com sucesso!');
+      print('Modelo TFLite (fp32) carregado com sucesso!');
     } catch (e) {
       print('Erro ao carregar o modelo: $e');
       throw Exception('Falha ao inicializar a IA.');
