@@ -102,7 +102,7 @@ class TFLiteService {
     // --- INÍCIO DO CRONÔMETRO ---
     final stopwatch = Stopwatch()..start();
 
-    // Inferência
+    // Inferência (delegação via FFI!)
     _interpreter!.run(inputTensor, outputTensor);
 
     stopwatch.stop();
